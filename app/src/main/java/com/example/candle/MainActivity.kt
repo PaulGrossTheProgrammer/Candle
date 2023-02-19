@@ -30,31 +30,34 @@ class MainActivity : AppCompatActivity() {
             paint.color = Color.BLACK
             canvas!!.drawPaint(paint)
 
-            // draw circle with anti aliasing turned off
+            // draw circle
             //paint.isAntiAlias = false
             paint.color = Color.WHITE
             canvas!!.drawCircle(200F, 200F, 150F, paint)
 
-            /*
+
             // draw green circle with anti aliasing turned on
             paint.isAntiAlias = true
             paint.color = Color.GREEN
-            canvas!!.drawCircle(60F, 20F, 15F, paint)
+            canvas!!.drawCircle(660F, 1320F, 150F, paint)
 
             // draw red rectangle with anti aliasing turned off
             paint.isAntiAlias = false
             paint.color = Color.RED
-            canvas!!.drawRect(100F, 5F, 200F, 30F, paint)
+            canvas!!.drawRect(100F, 500F, 200F, 730F, paint)
 
             // draw the rotated text
-            canvas!!.rotate(-45F)
+            canvas!!.save()
+            canvas!!.rotate(-15F)
+            //canvas!!.restore()
 
             paint.style = Paint.Style.FILL
-            canvas!!.drawText("Graphics Rotation", 40F, 180F, paint)
+            paint.color = Color.CYAN
+            paint.setTextSize(75F)
+            canvas!!.drawText("Graphics Rotation", 40F, 780F, paint)
 
             //undo the rotate
             canvas!!.restore()
-            */
         }
     }
 
