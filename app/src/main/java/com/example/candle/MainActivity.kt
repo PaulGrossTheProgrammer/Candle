@@ -6,21 +6,66 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
+
+    var candleView: CandleView? = null
+    var myTimer: Timer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(CandleView(this, null));
+        candleView = CandleView(this, null)
+        setContentView(candleView)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Resume the animation
+        myTimer = Timer()
+        val delay = 0L
+        val period = 25L
+
+        var doThis = object : TimerTask() {
+            override fun run() {
+                // Log.v("TIMER", "running...")
+                candleView?.doAnimation()
+                candleView?.postInvalidate()
+            }
+        }
+
+        myTimer?.scheduleAtFixedRate(doThis, delay, period)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        Log.v("Candle", "onPause() running")
+        myTimer?.cancel()
+        Log.v("Candle", "Animation timer cancelled")
     }
 
     class CandleView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
+        private var ballX = 200F
+
+        fun doAnimation() {
+            //Log.v("CandleView", "doAnimation()")
+            ballX += 2
+            if (ballX > 500) {
+                ballX = 200F
+            }
+        }
+
         override fun onDraw(canvas: Canvas?) {
             super.onDraw(canvas)
+
+            //Log.v("CandleView", "onDraw()")
 
             // custom drawing code here
             val paint = Paint()
@@ -31,9 +76,9 @@ class MainActivity : AppCompatActivity() {
             canvas!!.drawPaint(paint)
 
             // draw circle
-            //paint.isAntiAlias = false
+            paint.isAntiAlias = false
             paint.color = Color.WHITE
-            canvas!!.drawCircle(200F, 200F, 150F, paint)
+            canvas!!.drawCircle(ballX, 200F, 150F, paint)
 
 
             // draw green circle with anti aliasing turned on
@@ -60,5 +105,5 @@ class MainActivity : AppCompatActivity() {
             canvas!!.restore()
         }
     }
-
 }
+
