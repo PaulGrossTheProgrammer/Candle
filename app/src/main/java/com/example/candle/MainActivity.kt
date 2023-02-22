@@ -13,8 +13,9 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    var candleView: CandleView? = null
-    var myTimer: Timer? = null
+    private var candleView: CandleView? = null
+    private var animationTimer: Timer? = null
+    private val animationPeriod = 25L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,27 +28,24 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         // Resume the animation
-        myTimer = Timer()
-        val delay = 0L
-        val period = 25L
+        animationTimer = Timer()
 
-        var doThis = object : TimerTask() {
+        var animationTask = object : TimerTask() {
             override fun run() {
-                // Log.v("TIMER", "running...")
+                // Log.d("animationTask", "running...")
                 candleView?.doAnimation()
-                candleView?.postInvalidate()
             }
         }
 
-        myTimer?.scheduleAtFixedRate(doThis, delay, period)
+        animationTimer?.scheduleAtFixedRate(animationTask, 0L, animationPeriod)
     }
 
     override fun onPause() {
         super.onPause()
 
-        Log.v("Candle", "onPause() running")
-        myTimer?.cancel()
-        Log.v("Candle", "Animation timer cancelled")
+        Log.d("Candle", "onPause() running")
+        animationTimer?.cancel()
+        Log.d("Candle", "Animation timer cancelled")
     }
 
     class CandleView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
@@ -55,17 +53,20 @@ class MainActivity : AppCompatActivity() {
         private var ballX = 200F
 
         fun doAnimation() {
-            //Log.v("CandleView", "doAnimation()")
+            //Log.d("CandleView", "doAnimation()")
             ballX += 2
             if (ballX > 500) {
                 ballX = 200F
             }
+
+            // NOTE: Don't call invalidate() directly
+            // because the caller might not be from a UI thread.
+            postInvalidate()  // Safely mark this View as needing onDraw() again.
         }
 
         override fun onDraw(canvas: Canvas?) {
             super.onDraw(canvas)
-
-            //Log.v("CandleView", "onDraw()")
+            //Log.d("CandleView", "onDraw()")
 
             // custom drawing code here
             val paint = Paint()
