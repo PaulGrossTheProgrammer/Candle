@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         // Resume the animation
         animationTimer = Timer()
 
-        var animationTask = object : TimerTask() {
+        val animationTask = object : TimerTask() {
             override fun run() {
                 // Log.d("animationTask", "running...")
                 candleView?.doAnimation()
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         private var ballX = 0F
         private var ballY = 0F
 
-        val paint = Paint()
+        private val paint = Paint()
 
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
 
             paint.style = Paint.Style.FILL
             paint.color = Color.CYAN
-            paint.setTextSize(75F)
+            paint.textSize = 75F
             canvas?.drawText("$measuredWidth pixels", (midX * 0.7F), (midY * 0.2F), paint)
 
             // draw the rotated text
