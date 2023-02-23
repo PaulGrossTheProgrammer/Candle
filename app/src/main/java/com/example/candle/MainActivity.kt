@@ -50,8 +50,11 @@ class MainActivity : AppCompatActivity() {
 
     class CandleView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
-        private var ballX = 200F
-        private var ballY = 200F
+        private var midX = 0F
+        private var midY = 0F
+
+        private var ballX = 0F
+        private var ballY = 0F
 
         val paint = Paint()
 
@@ -59,8 +62,11 @@ class MainActivity : AppCompatActivity() {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
             Log.d("CandleView", "B: Width = $measuredWidth, height = $measuredHeight")
 
-            ballX = measuredWidth/2F
-            ballY = measuredHeight/2F
+            midX = measuredWidth/2F
+            midY = measuredHeight/2F
+
+            ballX = midX
+            ballY = midY
         }
 
         fun doAnimation() {
@@ -89,35 +95,23 @@ class MainActivity : AppCompatActivity() {
 
             // make the entire canvas white
             paint.color = Color.BLACK
-            canvas!!.drawPaint(paint)
+            canvas?.drawPaint(paint)
 
             // draw circle
             paint.isAntiAlias = false
             paint.color = Color.WHITE
-            canvas!!.drawCircle(ballX, ballY, 150F, paint)
-
-
-            // draw green circle with anti aliasing turned on
-            paint.isAntiAlias = true
-            paint.color = Color.GREEN
-            canvas!!.drawCircle(660F, 1320F, 150F, paint)
-
-            // draw red rectangle with anti aliasing turned off
-            paint.isAntiAlias = false
-            paint.color = Color.RED
-            canvas!!.drawRect(100F, 500F, 200F, 730F, paint)
-
-            // draw the rotated text
-            canvas!!.save()
-            canvas!!.rotate(-15F)
+            canvas?.drawCircle(ballX, ballY, 150F, paint)
 
             paint.style = Paint.Style.FILL
             paint.color = Color.CYAN
             paint.setTextSize(75F)
-            canvas!!.drawText("Graphics Rotation", 40F, 780F, paint)
+            canvas?.drawText("$measuredWidth pixels", (midX * 0.7F), (midY * 0.2F), paint)
 
-            //undo the rotate
-            canvas!!.restore()
+            // draw the rotated text
+            canvas?.save()
+            canvas?.rotate(90F)
+            canvas?.drawText("$measuredHeight pixels", (midY * 1.3F), -midX, paint)
+            canvas?.restore()
         }
     }
 }
