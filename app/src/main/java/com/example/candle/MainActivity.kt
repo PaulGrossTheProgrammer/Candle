@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import androidx.annotation.MainThread
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
@@ -28,12 +27,11 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        // Resume the animation
+        // Start the animation
         animationTimer = Timer()
 
         val animationTask = object : TimerTask() {
             override fun run() {
-                // Log.d("animationTask", "running...")
                 candleView?.doAnimation()
             }
         }
@@ -51,13 +49,13 @@ class MainActivity : AppCompatActivity() {
 
     class CandleView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
-        private var mainContext: Context? = null
+        private var mainContext: Context? = null  // A pointer to the main context for accessing resources.
 
-        private var midY = 0F
         init {
             mainContext = context
         }
 
+        private var midY = 0F
         private var midX = 0F
 
         private var ballX = 0F
@@ -70,11 +68,10 @@ class MainActivity : AppCompatActivity() {
 
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-            Log.d("CandleView", "B: Width = $measuredWidth, height = $measuredHeight")
+            Log.d("CandleView", "onMeasure: width = $measuredWidth, height = $measuredHeight")
 
             midX = measuredWidth/2F
             midY = measuredHeight/2F
-
 
             widthMessage = "$measuredWidth ${mainContext?.getString(R.string.pixels)}"
             heightMessage = "$measuredHeight ${mainContext?.getString(R.string.pixels)}"
@@ -107,7 +104,7 @@ class MainActivity : AppCompatActivity() {
             // custom drawing code here
             paint.style = Paint.Style.FILL
 
-            // make the entire canvas white
+            // make the entire canvas black
             paint.color = Color.BLACK
             canvas?.drawPaint(paint)
 
@@ -119,12 +116,12 @@ class MainActivity : AppCompatActivity() {
             paint.style = Paint.Style.FILL
             paint.color = Color.CYAN
             paint.textSize = 75F
-            canvas?.drawText(widthMessage.toString(), (midX * 0.7F), (midY * 0.2F), paint)
+            canvas?.drawText(widthMessage, (midX * 0.7F), (midY * 0.2F), paint)
 
             // draw the rotated text
             canvas?.save()
             canvas?.rotate(90F)
-            canvas?.drawText(heightMessage.toString(), (midY * 1.3F), -midX, paint)
+            canvas?.drawText(heightMessage, (midY * 1.3F), -midX, paint)
             canvas?.restore()
         }
     }
