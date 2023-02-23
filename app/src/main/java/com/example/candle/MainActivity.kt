@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import androidx.annotation.MainThread
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
@@ -50,11 +51,20 @@ class MainActivity : AppCompatActivity() {
 
     class CandleView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
-        private var midX = 0F
+        private var mainContext: Context? = null
+
         private var midY = 0F
+        init {
+            mainContext = context
+        }
+
+        private var midX = 0F
 
         private var ballX = 0F
         private var ballY = 0F
+
+        private var widthMessage = ""
+        private var heightMessage = ""
 
         private val paint = Paint()
 
@@ -64,6 +74,10 @@ class MainActivity : AppCompatActivity() {
 
             midX = measuredWidth/2F
             midY = measuredHeight/2F
+
+
+            widthMessage = "$measuredWidth ${mainContext?.getString(R.string.pixels)}"
+            heightMessage = "$measuredHeight ${mainContext?.getString(R.string.pixels)}"
 
             ballX = midX
             ballY = midY
@@ -105,12 +119,12 @@ class MainActivity : AppCompatActivity() {
             paint.style = Paint.Style.FILL
             paint.color = Color.CYAN
             paint.textSize = 75F
-            canvas?.drawText("$measuredWidth pixels", (midX * 0.7F), (midY * 0.2F), paint)
+            canvas?.drawText(widthMessage.toString(), (midX * 0.7F), (midY * 0.2F), paint)
 
             // draw the rotated text
             canvas?.save()
             canvas?.rotate(90F)
-            canvas?.drawText("$measuredHeight pixels", (midY * 1.3F), -midX, paint)
+            canvas?.drawText(heightMessage.toString(), (midY * 1.3F), -midX, paint)
             canvas?.restore()
         }
     }
