@@ -51,16 +51,32 @@ class MainActivity : AppCompatActivity() {
     class CandleView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
         private var ballX = 200F
+        private var ballY = 200F
+
+        val paint = Paint()
+
+        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+            Log.d("CandleView", "B: Width = $measuredWidth, height = $measuredHeight")
+
+            ballX = measuredWidth/2F
+            ballY = measuredHeight/2F
+        }
 
         fun doAnimation() {
             //Log.d("CandleView", "doAnimation()")
-            ballX += 2
-            if (ballX > 500) {
-                ballX = 200F
+            ballX += 5
+            if (ballX > measuredWidth) {
+                ballX = 0F
             }
 
-            // NOTE: Don't call invalidate() directly
-            // because the caller might not be from a UI thread.
+            ballY += 5
+            if (ballY > measuredHeight) {
+                ballY = 0F
+            }
+
+            // NOTE: Don't call invalidate() directly, use postInvalidate() instead,
+            // because the caller might not be calling from  a UI thread.
             postInvalidate()  // Safely mark this View as needing onDraw() again.
         }
 
@@ -69,7 +85,6 @@ class MainActivity : AppCompatActivity() {
             //Log.d("CandleView", "onDraw()")
 
             // custom drawing code here
-            val paint = Paint()
             paint.style = Paint.Style.FILL
 
             // make the entire canvas white
@@ -79,7 +94,7 @@ class MainActivity : AppCompatActivity() {
             // draw circle
             paint.isAntiAlias = false
             paint.color = Color.WHITE
-            canvas!!.drawCircle(ballX, 200F, 150F, paint)
+            canvas!!.drawCircle(ballX, ballY, 150F, paint)
 
 
             // draw green circle with anti aliasing turned on
@@ -95,7 +110,6 @@ class MainActivity : AppCompatActivity() {
             // draw the rotated text
             canvas!!.save()
             canvas!!.rotate(-15F)
-            //canvas!!.restore()
 
             paint.style = Paint.Style.FILL
             paint.color = Color.CYAN
