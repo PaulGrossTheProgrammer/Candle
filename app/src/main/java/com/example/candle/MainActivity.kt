@@ -78,6 +78,8 @@ class MainActivity : AppCompatActivity() {
 
             ballX = midX
             ballY = midY
+
+            paint.isAntiAlias = false
         }
 
         fun doAnimation() {
@@ -109,7 +111,6 @@ class MainActivity : AppCompatActivity() {
             canvas?.drawPaint(paint)
 
             // draw circle
-            paint.isAntiAlias = false
             paint.color = Color.WHITE
             canvas?.drawCircle(ballX, ballY, 150F, paint)
 
