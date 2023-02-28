@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
     private var candleView: CandleView? = null
     private var animationTimer: Timer? = null
-    private val animationPeriod = 25L
+    private val animationPeriod = 250L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,11 +60,37 @@ class MainActivity : AppCompatActivity() {
 
         private var ballX = 0F
         private var ballY = 0F
+        private var ballRadius = 0F
+        private var ballColour = Color.YELLOW
+        private var ballColours: IntArray? = null
 
         private var widthMessage = ""
         private var heightMessage = ""
 
         private val paint = Paint()
+
+
+        private fun buildBallColourArray(): IntArray {
+            var myList = mutableListOf<Int>()
+
+            val colourBaseH = 25f
+            val colourBaseS = 0.65f
+            val colourBaseV = 0.5f
+
+            // TODO: Vary S and B too
+            val hVariance = 5.0f
+
+            for (i in 1..10) {
+                val newH = colourBaseH + (kotlin.random.Random.nextFloat() * 2 * hVariance) - hVariance
+                Log.d("buildBallColourArray", "newH = $newH")
+
+                val c = Color.HSVToColor(floatArrayOf(newH, colourBaseS, colourBaseV) )
+                myList.add(c)
+            }
+
+            Log.d("buildBallColourArray", "Colour count = ${myList.size}")
+            return myList.toIntArray()
+        }
 
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -78,21 +104,15 @@ class MainActivity : AppCompatActivity() {
 
             ballX = midX
             ballY = midY
+            ballRadius = measuredWidth * 0.1F
+            ballColours = buildBallColourArray()
 
             paint.isAntiAlias = false
+            paint.style = Paint.Style.FILL
         }
 
         fun doAnimation() {
-            //Log.d("CandleView", "doAnimation()")
-            ballX += 5
-            if (ballX > measuredWidth) {
-                ballX = 0F
-            }
-
-            ballY += 5
-            if (ballY > measuredHeight) {
-                ballY = 0F
-            }
+            ballColour = ballColours?.random() ?:Color.YELLOW
 
             // NOTE: Don't call invalidate() directly, use postInvalidate() instead,
             // because the caller might not be calling from  a UI thread.
@@ -111,9 +131,10 @@ class MainActivity : AppCompatActivity() {
             canvas?.drawPaint(paint)
 
             // draw circle
-            paint.color = Color.WHITE
-            canvas?.drawCircle(ballX, ballY, 150F, paint)
+            paint.color = ballColour
+            canvas?.drawCircle(ballX, ballY, ballRadius, paint)
 
+            /*
             paint.style = Paint.Style.FILL
             paint.color = Color.CYAN
             paint.textSize = 75F
@@ -122,8 +143,9 @@ class MainActivity : AppCompatActivity() {
             // draw the rotated text
             canvas?.save()
             canvas?.rotate(90F)
-            canvas?.drawText(heightMessage, (midY * 1.3F), -midX, paint)
+            canvas?.drawText(heightMessage, (midY * 1.2F), -midX, paint)
             canvas?.restore()
+             */
         }
     }
 }
